@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Mon Kit Écologeek − Démo</title>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.5/aframe/build/aframe-ar.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
+</head>
+
+
+<body style="margin : 0px; overflow: hidden;">
+
+    <a-scene embedded arjs="sourceType: webcam;" vr-mode-ui="enabled: false"
+        renderer="sortObjects: true; antialias: true; logarithmicDepthBuffer: true;"
+        arjs="trackingMethod: best; detectionMode :'color_and_matrix' changeMatrixMode: 'modelViewMatrix';"
+        sourceWidth="800" sourceHeight="600" displayWidth="1280" displayHeight="720"
+        device-orientation-permission-ui="enabled: false"
+        mindar-image="imageTargetSrc: ./assets/targets.mind; maxTrack:1">
+
+        <a-assets>
+            <img src="assets/ar1.png" id="ar1">
+            <img src="assets/ar2.png" id="ar2">
+            <img src="assets/ar3.png" id="ar3">
+            <img src="assets/ar4.png" id="ar4">
+
+            <a-asset-item id="battery" src="./assets/battery.glb"></a-asset-item>
+            <a-asset-item id="cpu" src="./assets/processor.glb"></a-asset-item>
+            <a-asset-item id="iphone" src="./assets/iphone.glb"></a-asset-item>
+        </a-assets>
+
+        <a-image mindar-image-target="targetIndex: 0" src="#ar1" rotation="270 0 0" width="1.5" height="1.5" animation="property: components.material.material.opacity; from: 0; to: 1; dur: 500"></a-image>
+        <a-image mindar-image-target="targetIndex: 1" src="#ar2" rotation="270 0 0" width="1.5" height="1.5" animation="property: components.material.material.opacity; from: 0; to: 1; dur: 500"></a-image>
+        <a-image mindar-image-target="targetIndex: 2" src="#ar3" rotation="270 0 0" width="1.5" height="1.5" animation="property: components.material.material.opacity; from: 0; to: 1; dur: 500"></a-image>
+        <a-image mindar-image-target="targetIndex: 3" src="#ar4" rotation="270 0 0" width="1.5" height="1.5" animation="property: components.material.material.opacity; from: 0; to: 1; dur: 500"></a-image>
+
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    </a-scene>
+</body>
+</html>
