@@ -3,22 +3,35 @@
 
 <head>
     <title>Mon Kit Écologeek − Démo</title>
-    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.5/aframe/build/aframe-ar.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
-    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <script>
+        AFRAME.registerComponent("smooth-movement", {
+            schema: {
+                factor: { type: "number", default: 0.1 }
+            },
+            init: function () {
+                this.el.object3D.userData.smoothPosition = this.el.object3D.position.clone();
+            },
+            tick: function () {
+                let target = this.el.object3D.position;
+                let current = this.el.object3D.userData.smoothPosition;
+                current.lerp(target, this.data.factor);
+                this.el.object3D.userData.smoothPosition = current;
+                this.el.object3D.position = current;
+            }
+        });
+    </script>
 </head>
 
 
 <body style="margin : 0px; overflow: hidden;">
 
-    <a-scene embedded arjs="sourceType: webcam;" vr-mode-ui="enabled: false"
-        renderer="sortObjects: true; antialias: true; logarithmicDepthBuffer: true;"
-        arjs="trackingMethod: best; detectionMode :'color_and_matrix' changeMatrixMode: 'modelViewMatrix';"
-        sourceWidth="800" sourceHeight="600" displayWidth="1280" displayHeight="720"
-        device-orientation-permission-ui="enabled: false"
-        mindar-image="imageTargetSrc: ./assets/targets.mind; maxTrack:1">
+    <a-scene mindar-image="imageTargetSrc: ./assets/targets.mind; maxTrack:1; filterMinCF: 0.1; filterBeta: 0.3"
+        color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights toneMapping: ACESFilmic; toneMappingExposure: 1.0" vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false" >
 
         <a-assets>
             <img src="assets/ar1.png" id="ar1">
@@ -26,17 +39,32 @@
             <img src="assets/ar3.png" id="ar3">
             <img src="assets/ar4.png" id="ar4">
 
-            <a-asset-item id="battery" src="./assets/battery.glb"></a-asset-item>
-            <a-asset-item id="cpu" src="./assets/processor.glb"></a-asset-item>
-            <a-asset-item id="iphone" src="./assets/iphone.glb"></a-asset-item>
+            <a-asset-item id="battery" src="assets/stylized_energy_cell.glb"></a-asset-item>
+            <a-asset-item id="cpu" src="assets/processor_cpu_3d_cartoon.glb"></a-asset-item>
+            <a-asset-item id="iphone" src="assets/iphone_mini.glb"></a-asset-item>
         </a-assets>
 
-        <a-image mindar-image-target="targetIndex: 0" src="#ar1" rotation="270 0 0" width="1.5" height="1.5" animation="property: components.material.material.opacity; from: 0; to: 1; dur: 500"></a-image>
-        <a-image mindar-image-target="targetIndex: 1" src="#ar2" rotation="270 0 0" width="1.5" height="1.5" animation="property: components.material.material.opacity; from: 0; to: 1; dur: 500"></a-image>
-        <a-image mindar-image-target="targetIndex: 2" src="#ar3" rotation="270 0 0" width="1.5" height="1.5" animation="property: components.material.material.opacity; from: 0; to: 1; dur: 500"></a-image>
-        <a-image mindar-image-target="targetIndex: 3" src="#ar4" rotation="270 0 0" width="1.5" height="1.5" animation="property: components.material.material.opacity; from: 0; to: 1; dur: 500"></a-image>
+        <a-entity mindar-image-target="targetIndex: 0" smooth-movement="factor: 0.05">
+            <a-image src="#ar1" rotation="0 0 0" width="1.5" height="1.5"></a-image>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 1" smooth-movement="factor: 0.5">
+            <a-image src="#ar2" rotation="0 0 0" width="1.5" height="1.5" smooth-movement="factor: 0.0005"></a-image>
+            <a-gltf-model src="#cpu" scale="0.04 0.04 0.04" position=".23 -.35 .1" animation="property: rotation; from: 45 0 0; to: 45 360 0; loop: true; dur: 5000; easing: linear;"></a-gltf-model>
+            <a-gltf-model src="#battery" scale="0.07 0.1 0.07" position="-.26 -.22 .2" animation="property: rotation; from: 45 45 0; to: 45 360 360; loop: true; dur: 10000; easing: linear;"></a-gltf-model>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 2" smooth-movement="factor: 0.05">
+            <a-image src="#ar3" rotation="0 0 0" width="1.5" height="1.5"></a-image>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 3" smooth-movement="factor: 0.05">
+            <a-image src="#ar4" rotation="0 0 0" width="1.5" height="1.5"></a-image>
+            <a-gltf-model src="#iphone" scale="2 2 2" position="-.2 .75 .4" animation="property: rotation; from: 130 0 0; to: 130 0 360; loop: true; dur: 10000; easing: linear;"></a-gltf-model>
+        </a-entity>
 
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
     </a-scene>
 </body>
+
 </html>
